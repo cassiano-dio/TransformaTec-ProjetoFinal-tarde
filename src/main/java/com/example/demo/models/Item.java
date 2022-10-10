@@ -21,6 +21,9 @@ public class Item {
     private String name;
     private String price;
 
+    // Id do Todo para pesquisa na API do JSON Placeholder
+    private Long todoId;
+
     // Os valores desses campos virão da api do JSON Placeholder (OpenFeign)
     private String description;
     private Boolean status;
@@ -34,6 +37,8 @@ public class Item {
         this.description = description;
         this.status = status;
     }
+
+    
 
     public Long getId() {
         return id;
@@ -67,6 +72,14 @@ public class Item {
         this.price = price;
     }
 
+    public Long getTodoId() {
+        return todoId;
+    }
+
+    public void setTodoId(Long todoId) {
+        this.todoId = todoId;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -82,4 +95,6 @@ public class Item {
     public void setStatus(Boolean status) {
         this.status = status;
     }
+
+
 }
