@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.example.demo.interfaces.TodoInterface;
 import com.example.demo.models.Item;
-import com.example.demo.payload.response.TodoResponse;
 import com.example.demo.repositories.ItemRepository;
 
 @RestController
@@ -25,16 +22,9 @@ public class ItemController{
     @Autowired
     private ItemRepository itemRepository;
 
-    @Autowired
-    private TodoInterface todoInterface;
 
     @PostMapping("/items")
     public ResponseEntity<Item> createItem(@RequestBody Item item){
-
-        // Consumento a a API do JSON Placeholder
-        TodoResponse todo = todoInterface.getTodoById(item.getTodoId());
-
-        System.out.println(todo.getTitle());
 
         Item _item = itemRepository.save(item);
 
