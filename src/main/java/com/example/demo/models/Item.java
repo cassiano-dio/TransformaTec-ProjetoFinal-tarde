@@ -19,10 +19,15 @@ public class Item {
 
     //Valores de campos inseridos pelo usuário
     private String name;
-    private String price;
+
+    // Valor virá da API de criptomoedas
+    private Double price;
 
     // Id do Todo para pesquisa na API do JSON Placeholder
     private Long todoId;
+
+    // Símbolo para pesquisa de preço criptomeda
+    private String symbol;
 
     // Os valores desses campos virão da api do JSON Placeholder (OpenFeign)
     private String description;
@@ -30,7 +35,7 @@ public class Item {
 
     public Item() {}
 
-    public Item(Long userId, String name, String price, String description, Boolean status) {
+    public Item(Long userId, String name, Double price, String description, Boolean status) {
         this.userId = userId;
         this.name = name;
         this.price = price;
@@ -64,11 +69,11 @@ public class Item {
         this.name = name;
     }
 
-    public String getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -78,6 +83,14 @@ public class Item {
 
     public void setTodoId(Long todoId) {
         this.todoId = todoId;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 
     public String getDescription() {
@@ -95,6 +108,5 @@ public class Item {
     public void setStatus(Boolean status) {
         this.status = status;
     }
-
 
 }

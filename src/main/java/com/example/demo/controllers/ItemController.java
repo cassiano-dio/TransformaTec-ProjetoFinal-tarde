@@ -14,7 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.interfaces.CryptoPriceInterface;
+import com.example.demo.interfaces.TodoInterface;
 import com.example.demo.models.Item;
+import com.example.demo.payload.response.CryptoPriceResponse;
+import com.example.demo.payload.response.TodoResponse;
 import com.example.demo.repositories.ItemRepository;
 
 @RestController
@@ -25,10 +30,39 @@ public class ItemController{
     @Autowired
     private ItemRepository itemRepository;
 
+    // Injetando a interface CryptoPriceInterface como dependência para consumo da API de TODOS
+    @Autowired
+    private TodoInterface todoInterface;
+
+    // Injetando a interface CryptoPriceInterface como dependência para consumo da API de preços de criptos
+    @Autowired
+    private CryptoPriceInterface cryptoPriceInterface;
 
     // Criando um item
     @PostMapping("/items")
     public ResponseEntity<Item> createItem(@RequestBody Item item){
+
+        TodoResponse todoResponse = todoInterface.getTodoById(item.getTodoId());
+
+        CryptoPriceResponse criptoPriceResponse = cryptoPriceInterface.getPriceBySymbol(item.getSymbol());
+
+        // System.out.println("--------------------------Retorno da API de criptomoeda--------------------------");
+        // System.out.println(criptoPriceResponse.getPrice());
+        // System.out.println("--------------------------------------------------------------------------------------");
+
+        // System.out.println("--------------------------Retorno da API do JSON Placeholder--------------------------");
+        // System.out.println(todoResponse.getId());
+        // System.out.println(todoResponse.getUserId());
+        // System.out.println(todoResponse.getTitle());
+        // System.out.println(todoResponse.isCompleted());
+        // System.out.println("--------------------------------------------------------------------------------------");
+
+        // Dado de preço recebido da API de criptomoedas sendo atribuido ao atributo de preço do item
+        item.setPrice(criptoPriceResponse.getPrice());
+
+        // Dados recebidos da API do JSON Placeholder sendo atribuidos ao novo item criado.
+        item.setDescription(todoResponse.getTitle());
+        item.setStatus(todoResponse.isCompleted());
 
         Item _item = itemRepository.save(item);
 
