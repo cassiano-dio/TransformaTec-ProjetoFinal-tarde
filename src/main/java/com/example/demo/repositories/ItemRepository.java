@@ -22,5 +22,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>{
 
     // Listar todos os itens
     List<Item> findAll();
-    
+
+    void deleteById(long id);
+
 }
