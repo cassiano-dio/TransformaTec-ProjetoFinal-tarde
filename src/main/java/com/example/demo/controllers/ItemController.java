@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,10 @@ public class ItemController{
     public ResponseEntity<Item> getById(@PathVariable("id") long id){
 
         Item item = itemRepository.findById(id);
+
+        if (item == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     
         return new ResponseEntity<Item>(item, HttpStatus.OK);
     }
@@ -82,13 +87,14 @@ public class ItemController{
         return new ResponseEntity<List<Item>>(items, HttpStatus.OK);
     }
 
+    // Atualizando um item
     @PutMapping("/items/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable("id") long id, @RequestBody Item item){
+    public ResponseEntity<Object> updateItem(@PathVariable("id") long id, @RequestBody Item item){
 
         Item _item = itemRepository.findById(id);
 
         if (_item == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<Object>("Não foi possível executar a operação", HttpStatus.NOT_FOUND);
         }
 
         _item.setUserId(item.getUserId());
@@ -100,6 +106,20 @@ public class ItemController{
         // Salvando item editado no DB
         itemRepository.save(_item);
 
-        return new ResponseEntity<Item>(_item, HttpStatus.OK);
+        return new ResponseEntity<Object>(_item, HttpStatus.OK);
+    }
+
+    // Removendo um item
+    @DeleteMapping("/items/{id}")
+    public ResponseEntity<Object> deleteItem(@PathVariable("id") long id){
+
+        try {
+            itemRepository.deleteById(id);
+        } catch (Exception e) {
+            return new ResponseEntity<Object>("Não foi possível executar a operação", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<Object>("Item excluído com sucesso!", HttpStatus.OK);
+
     }
 }
