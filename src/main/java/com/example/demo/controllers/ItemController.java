@@ -1,10 +1,14 @@
 package com.example.demo.controllers;
 
+import java.security.Principal;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,23 +43,20 @@ public class ItemController{
     private CryptoPriceInterface cryptoPriceInterface;
 
     // Criando um item
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/items")
-    public ResponseEntity<Item> createItem(@RequestBody Item item){
+    public ResponseEntity<Item> createItem(@RequestBody Item item, HttpServletRequest request){
 
+        Principal principal = request.getUserPrincipal();
+
+        System.out.println("----------------------------Username----------------------------");
+        System.out.println(principal.getName());
+        System.out.println("----------------------------------------------------------------");
+        
         TodoResponse todoResponse = todoInterface.getTodoById(item.getTodoId());
 
         CryptoPriceResponse criptoPriceResponse = cryptoPriceInterface.getPriceBySymbol(item.getSymbol());
 
-        // System.out.println("--------------------------Retorno da API de criptomoeda--------------------------");
-        // System.out.println(criptoPriceResponse.getPrice());
-        // System.out.println("--------------------------------------------------------------------------------------");
-
-        // System.out.println("--------------------------Retorno da API do JSON Placeholder--------------------------");
-        // System.out.println(todoResponse.getId());
-        // System.out.println(todoResponse.getUserId());
-        // System.out.println(todoResponse.getTitle());
-        // System.out.println(todoResponse.isCompleted());
-        // System.out.println("--------------------------------------------------------------------------------------");
 
         // Dado de preço recebido da API de criptomoedas sendo atribuido ao atributo de preço do item
         item.setPrice(criptoPriceResponse.getPrice());
