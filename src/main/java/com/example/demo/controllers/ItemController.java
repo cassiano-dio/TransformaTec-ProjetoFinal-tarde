@@ -58,6 +58,8 @@ public class ItemController{
 
         item.setUsername(principal.getName());
         
+        //Consumindo dados de API externa com OpenFeign
+
         TodoResponse todoResponse = todoInterface.getTodoById(item.getTodoId());
 
         CryptoPriceResponse criptoPriceResponse = cryptoPriceInterface.getPriceBySymbol(item.getSymbol());
@@ -81,6 +83,7 @@ public class ItemController{
         produces = "application/json"
     )
     @GetMapping("/items/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Item> getById(@PathVariable("id") long id){
 
         Item item = itemRepository.findById(id);
