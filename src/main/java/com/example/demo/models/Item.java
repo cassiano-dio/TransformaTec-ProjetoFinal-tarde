@@ -14,8 +14,8 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //Id de usuário dono do item
-    private Long userId;
+
+    private String username;
 
     //Valores de campos inseridos pelo usuário
     private String name;
@@ -35,8 +35,8 @@ public class Item {
 
     public Item() {}
 
-    public Item(Long userId, String name, Double price, String description, Boolean status) {
-        this.userId = userId;
+    public Item(String username, String name, Double price, String description, Boolean status) {
+        this.username = username;
         this.name = name;
         this.price = price;
         this.description = description;
@@ -52,15 +52,15 @@ public class Item {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public Long getUserId() {
-        return userId;
+    
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUsername(String username) {
+        this.username = username;
     }
-
+    
     public String getName() {
         return name;
     }

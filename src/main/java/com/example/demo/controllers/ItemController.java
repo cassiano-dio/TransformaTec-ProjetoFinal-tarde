@@ -49,9 +49,7 @@ public class ItemController{
 
         Principal principal = request.getUserPrincipal();
 
-        System.out.println("----------------------------Username----------------------------");
-        System.out.println(principal.getName());
-        System.out.println("----------------------------------------------------------------");
+        item.setUsername(principal.getName());
         
         TodoResponse todoResponse = todoInterface.getTodoById(item.getTodoId());
 
@@ -96,11 +94,29 @@ public class ItemController{
         return new ResponseEntity<List<Item>>(items, HttpStatus.OK);
     }
 
-    // Listando itens por id de usuário
-    @GetMapping("/users/{u_id}/items")
-    public ResponseEntity<List<Item>> listItemsByUserId(@PathVariable("u_id") long id){
+    //Listando itens por username informado
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/admin/items/user")
+    public ResponseEntity<List<Item>> adminListItemsByUsername(@RequestParam String username){
 
-        List<Item> items = itemRepository.findByUser(id); 
+        List<Item> items = itemRepository.findByUsername(username); 
+
+        if(items.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<List<Item>>(items, HttpStatus.OK);
+
+    }
+
+    // Listando itens por username de usuário logado
+    @GetMapping("/items/user")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<List<Item>> listItemsByUsername(HttpServletRequest request){
+
+        Principal principal = request.getUserPrincipal();
+
+        List<Item> items = itemRepository.findByUsername(principal.getName()); 
 
         if(items.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -132,7 +148,7 @@ public class ItemController{
             return new ResponseEntity<Object>("Não foi possível executar a operação", HttpStatus.NOT_FOUND);
         }
 
-        _item.setUserId(item.getUserId());
+        _item.setUsername(item.getUsername());
         _item.setName(item.getName());
         _item.setPrice(item.getPrice());
         _item.setDescription(item.getDescription());

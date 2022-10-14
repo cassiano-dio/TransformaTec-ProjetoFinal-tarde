@@ -17,13 +17,15 @@ public interface ItemRepository extends JpaRepository<Item, Long>{
     Item findById(long id);
 
     // Listar itens por Id de usuário
-    @Query(value = "SELECT * FROM items i WHERE i.user_id = :u_id", nativeQuery =  true)
-    List<Item> findByUser(@Param("u_id") long id);
+    @Query(value = "SELECT * FROM items i WHERE i.username = :name", nativeQuery =  true)
+    List<Item> findByUsername(@Param("name") String name);
 
     // Listar todos os itens
     List<Item> findAll();
 
     // Excluir um item
     void deleteById(long id);
+
+    
 
 }
