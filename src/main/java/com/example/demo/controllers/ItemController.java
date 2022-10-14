@@ -26,6 +26,8 @@ import com.example.demo.payload.response.CryptoPriceResponse;
 import com.example.demo.payload.response.TodoResponse;
 import com.example.demo.repositories.ItemRepository;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/api")
 public class ItemController{
@@ -43,6 +45,11 @@ public class ItemController{
     private CryptoPriceInterface cryptoPriceInterface;
 
     // Criando um item
+    @ApiOperation(
+        value = "Registro de novo item",
+        consumes = "application/json",
+        produces = "application/json"
+    )
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/items")
     public ResponseEntity<Item> createItem(@RequestBody Item item, HttpServletRequest request){
@@ -69,6 +76,10 @@ public class ItemController{
     };
 
     // Buscando um item
+    @ApiOperation(
+        value = "Busca de item por Id",
+        produces = "application/json"
+    )
     @GetMapping("/items/{id}")
     public ResponseEntity<Item> getById(@PathVariable("id") long id){
 
@@ -82,6 +93,11 @@ public class ItemController{
     }
     
     // Listando todos os itens
+    @ApiOperation(
+        value = "Listagem de itens - Admin",
+        produces = "application/json"    
+    )
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/items")
     public ResponseEntity<List<Item>> listItems(){
 
@@ -95,8 +111,12 @@ public class ItemController{
     }
 
     //Listando itens por username informado
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/admin/items/user")
+    @ApiOperation(
+        value = "Listagem de itens por username informado - Admin",
+        produces = "application/json"
+    )
+    @PreAuthorize("hasRole('ROLE_ADMIN')") 
+    @GetMapping("/admin/items/user") // /admin/items/user?username=cassiano
     public ResponseEntity<List<Item>> adminListItemsByUsername(@RequestParam String username){
 
         List<Item> items = itemRepository.findByUsername(username); 
@@ -110,6 +130,10 @@ public class ItemController{
     }
 
     // Listando itens por username de usuário logado
+    @ApiOperation(
+        value = "Listagem de itens por username de usuário logado",
+        produces = "application/json"
+    )
     @GetMapping("/items/user")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Item>> listItemsByUsername(HttpServletRequest request){
@@ -126,6 +150,11 @@ public class ItemController{
     }
 
     // Listando itens por status
+    @ApiOperation(
+        value = "Listagem de itens baseado em status",
+        produces = "application/json"
+    )
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/items/status") // /items/status?status=true/false
     public ResponseEntity<List<Item>> listItemsByStatus(@RequestParam boolean status){
 
@@ -139,6 +168,8 @@ public class ItemController{
     }
 
     // Atualizando um item
+    @ApiOperation("Atualização de item com base no Id")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/items/{id}")
     public ResponseEntity<Object> updateItem(@PathVariable("id") long id, @RequestBody Item item){
 
@@ -161,6 +192,11 @@ public class ItemController{
     }
 
     // Removendo um item
+    @ApiOperation(
+        value = "Exclusão de item",
+        produces = "application/json"
+    )
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/items/{id}")
     public ResponseEntity<Object> deleteItem(@PathVariable("id") long id){
 
