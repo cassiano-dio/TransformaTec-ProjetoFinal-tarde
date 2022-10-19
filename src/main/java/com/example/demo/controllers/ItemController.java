@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class ItemController{
 
     // Injetando a interface ItemRepository como dependência para uso dos métodos
@@ -50,13 +52,15 @@ public class ItemController{
         consumes = "application/json",
         produces = "application/json"
     )
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/items")
     public ResponseEntity<Item> createItem(@RequestBody Item item, HttpServletRequest request){
 
-        Principal principal = request.getUserPrincipal();
+        //Principal principal = request.getUserPrincipal();
 
-        item.setUsername(principal.getName());
+        //item.setUsername(principal.getName());
+
+        item.setUsername("cassiano");
         
         //Consumindo dados de API externa com OpenFeign
 
@@ -83,7 +87,7 @@ public class ItemController{
         produces = "application/json"
     )
     @GetMapping("/items/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Item> getById(@PathVariable("id") long id){
 
         Item item = itemRepository.findById(id);
@@ -100,7 +104,7 @@ public class ItemController{
         value = "Listagem de itens - Admin",
         produces = "application/json"    
     )
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/items")
     public ResponseEntity<List<Item>> listItems(){
 
@@ -118,7 +122,7 @@ public class ItemController{
         value = "Listagem de itens por username informado - Admin",
         produces = "application/json"
     )
-    @PreAuthorize("hasRole('ROLE_ADMIN')") 
+    //@PreAuthorize("hasRole('ROLE_ADMIN')") 
     @GetMapping("/admin/items/user") // /admin/items/user?username=cassiano
     public ResponseEntity<List<Item>> adminListItemsByUsername(@RequestParam String username){
 
@@ -138,7 +142,7 @@ public class ItemController{
         produces = "application/json"
     )
     @GetMapping("/items/user")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Item>> listItemsByUsername(HttpServletRequest request){
 
         Principal principal = request.getUserPrincipal();
@@ -157,7 +161,7 @@ public class ItemController{
         value = "Listagem de itens baseado em status",
         produces = "application/json"
     )
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/items/status") // /items/status?status=true/false
     public ResponseEntity<List<Item>> listItemsByStatus(@RequestParam boolean status){
 
@@ -172,7 +176,7 @@ public class ItemController{
 
     // Atualizando um item
     @ApiOperation("Atualização de item com base no Id")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/items/{id}")
     public ResponseEntity<Object> updateItem(@PathVariable("id") long id, @RequestBody Item item){
 
@@ -199,7 +203,7 @@ public class ItemController{
         value = "Exclusão de item",
         produces = "application/json"
     )
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/items/{id}")
     public ResponseEntity<Object> deleteItem(@PathVariable("id") long id){
 
