@@ -60,7 +60,7 @@ public class ItemController{
 
         //item.setUsername(principal.getName());
 
-        item.setUsername("cassiano");
+        //item.setUsername("cassiano");
         
         //Consumindo dados de API externa com OpenFeign
 
